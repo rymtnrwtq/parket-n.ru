@@ -1,20 +1,22 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# ABSOLUT — Массивная доска из лиственницы
 
-# Run and deploy your AI Studio app
+Лендинг производителя премиальной массивной доски из сибирской лиственницы.
 
-This contains everything you need to run your app locally.
+## Запуск локально
 
-View your app in AI Studio: https://ai.studio/apps/ef6427dc-d93f-405d-9646-1c48dedcc9e6
+**Требования:** Node.js
 
-## Run Locally
+1. Установить зависимости:
+   ```
+   npm install
+   ```
+2. Создать `.env.local` на основе `.env.example` и указать токен Telegram-бота
+3. Запустить:
+   ```
+   npm run dev
+   ```
 
-**Prerequisites:**  Node.js
+## Деплой
 
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Сайт деплоится на GitHub Pages через GitHub Actions при пуше в `main`.  
+Кастомный домен: **parket-n.ru**

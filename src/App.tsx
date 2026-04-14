@@ -7,15 +7,14 @@ import { motion, AnimatePresence } from "motion/react";
 import {
   Phone,
   Send,
-  CheckCircle2,
   Leaf,
   Clock,
   Diamond,
   Package,
-  ChevronRight,
   Menu,
   X,
-  ArrowRight
+  ArrowRight,
+  CheckCircle2
 } from "lucide-react";
 
 function WhatsAppIcon({ size = 24 }: { size?: number }) {
@@ -67,37 +66,10 @@ export default function App() {
   const [activeFilter, setActiveFilter] = useState("Все");
   const [activeMobileColor, setActiveMobileColor] = useState<string | null>(null);
   const [popupColor, setPopupColor] = useState<string | null>(null);
-  const [formName, setFormName] = useState("");
-  const [formPhone, setFormPhone] = useState("");
-  const [formSent, setFormSent] = useState(false);
-  const [formSending, setFormSending] = useState(false);
 
   const openPopup = (colorName?: string) => {
     setPopupColor(colorName || null);
     setIsPopupOpen(true);
-  };
-
-  const handleFormSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formName.trim() || !formPhone.trim()) return;
-    setFormSending(true);
-    const token = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
-    const chatId = import.meta.env.VITE_TELEGRAM_CHAT_ID;
-    const text = `🪵 *Новая заявка с сайта ABSOLUT*\n\n👤 Имя: ${formName}\n📞 Телефон: ${formPhone}`;
-    try {
-      await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chat_id: chatId, text, parse_mode: "Markdown" }),
-      });
-      setFormSent(true);
-      setFormName("");
-      setFormPhone("");
-    } catch {
-      alert("Ошибка отправки. Позвоните нам: +7 (913) 916-28-88");
-    } finally {
-      setFormSending(false);
-    }
   };
 
   useEffect(() => {
@@ -129,7 +101,13 @@ export default function App() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4">
+            {/* Mobile: always-visible phone */}
+            <a href="tel:+79139162888" className="sm:hidden flex items-center gap-1.5 text-sm font-bold hover:text-brand-emerald transition-colors whitespace-nowrap">
+              <Phone size={14} />
+              +7 (913) 916-28-88
+            </a>
+            {/* Desktop: phone + messengers */}
             <div className="hidden sm:flex items-center gap-4">
               <div className="flex flex-col items-end">
                 <a href="tel:+79139162888" className="text-sm font-bold hover:text-brand-emerald transition-colors whitespace-nowrap">+7 (913) 916-28-88</a>
@@ -143,7 +121,7 @@ export default function App() {
                 </a>
               </div>
             </div>
-            <button 
+            <button
               onClick={() => setIsPopupOpen(true)}
               className="hidden md:block bg-brand-emerald text-white px-6 py-2.5 rounded-full text-xs uppercase tracking-widest font-bold hover:bg-brand-emerald/90 transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-brand-emerald/20"
             >
@@ -594,57 +572,26 @@ export default function App() {
         </div>
       </section>
 
-      {/* CTA Form Section */}
-      <section className="py-24 bg-white">
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <div className="text-[10px] uppercase tracking-[0.3em] font-bold text-brand-emerald mb-6">Обратная связь</div>
-          <h2 className="text-4xl md:text-6xl mb-8">Готовы преобразить свой интерьер?</h2>
-          <p className="text-brand-text/60 mb-16 text-lg">
-            Оставьте заявку на консультацию, и наш эксперт поможет подобрать идеальный оттенок и рассчитает точную стоимость.
+      {/* Contact Section */}
+      <section className="py-24 bg-white text-center">
+        <div className="max-w-3xl mx-auto px-6">
+          <div className="text-[10px] uppercase tracking-[0.3em] font-bold text-brand-emerald mb-6">Свяжитесь с нами</div>
+          <h2 className="text-4xl md:text-6xl mb-6">Позвоните нам</h2>
+          <p className="text-brand-text/60 mb-10 text-lg">
+            Проконсультируем, подберём оттенок и рассчитаем точную стоимость
           </p>
-          
-          {formSent ? (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mb-12 p-10 bg-brand-emerald/5 rounded-3xl border border-brand-emerald/20"
-            >
-              <div className="w-16 h-16 rounded-full bg-brand-emerald flex items-center justify-center mx-auto mb-6">
-                <CheckCircle2 size={32} className="text-white" />
-              </div>
-              <h3 className="text-2xl font-bold mb-2">Заявка отправлена!</h3>
-              <p className="text-brand-text/60">Мы свяжемся с вами в ближайшее время.</p>
-            </motion.div>
-          ) : (
-            <form onSubmit={handleFormSubmit} className="grid sm:grid-cols-2 gap-6 mb-12">
-              <input
-                type="text"
-                placeholder="Ваше имя"
-                value={formName}
-                onChange={(e) => setFormName(e.target.value)}
-                required
-                className="w-full px-8 py-5 bg-brand-bg rounded-2xl border border-transparent focus:border-brand-emerald/20 focus:bg-white outline-none transition-all text-sm"
-              />
-              <input
-                type="tel"
-                placeholder="+7 (___) ___-__-__"
-                value={formPhone}
-                onChange={(e) => setFormPhone(e.target.value)}
-                required
-                className="w-full px-8 py-5 bg-brand-bg rounded-2xl border border-transparent focus:border-brand-emerald/20 focus:bg-white outline-none transition-all text-sm"
-              />
-              <button
-                type="submit"
-                disabled={formSending}
-                className="sm:col-span-2 bg-brand-emerald text-white py-6 rounded-2xl text-xs uppercase tracking-widest font-bold hover:bg-brand-emerald/90 transition-all shadow-xl shadow-brand-emerald/20 disabled:opacity-60"
-              >
-                {formSending ? "Отправка..." : "Получить консультацию"}
-              </button>
-            </form>
-          )}
-          
+
+          <a
+            href="tel:+79139162888"
+            className="inline-flex items-center justify-center gap-4 text-5xl md:text-7xl font-bold text-brand-text hover:text-brand-emerald transition-colors whitespace-nowrap mb-4"
+          >
+            <Phone size={40} className="text-brand-emerald flex-shrink-0" />
+            +7 (913) 916-28-88
+          </a>
+          <div className="text-[10px] uppercase tracking-widest font-bold text-brand-emerald mb-12">Отвечаем за 5 минут</div>
+
           <div className="flex flex-col items-center gap-6">
-            <div className="text-xs uppercase tracking-widest font-bold text-brand-text/30">Или напишите нам в мессенджеры</div>
+            <div className="text-xs uppercase tracking-widest font-bold text-brand-text/30">Или напишите в мессенджеры</div>
             <div className="flex gap-4">
               <a href="https://wa.me/89139162888" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 px-8 py-4 bg-[#25D366] text-white rounded-2xl hover:opacity-90 transition-opacity">
                 <WhatsAppIcon size={20} />
@@ -655,8 +602,6 @@ export default function App() {
                 <span className="text-sm font-bold">Telegram</span>
               </a>
             </div>
-            <a href="tel:+79139162888" className="text-2xl font-serif mt-4 hover:text-brand-emerald transition-colors whitespace-nowrap">+7 (913) 916-28-88</a>
-            <div className="text-[10px] uppercase tracking-widest font-bold text-brand-emerald">Отвечаем за 5 минут</div>
           </div>
         </div>
       </section>
